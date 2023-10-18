@@ -8,19 +8,19 @@
 
 using namespace std;
 
-//----- ªì©l­È³]©w -----//
+//----- åˆå§‹å€¼è¨­å®š -----//
 bool EXPANDING;
 int def_point = 0;
 string instr, symbol, opcode, operand;
 string label = "AA";
 
-//----- «Ø¥ßTAB -----//
+//----- å»ºç«‹TAB -----//
 vector <string> DEFTAB;
 map <string, pair<int, int> > NAMTAB;
 map <string, vector<string> > ARGTAB;
 map <string, int> op_map;
 
-//----- ¶}ÀÉ -----// 
+//----- é–‹æª” -----// 
 ifstream in(filename);
 ofstream out("EXPAND.txt");
 
@@ -35,7 +35,7 @@ void EXPAND();
 
 int main()
 {
-	//----- ¹Bºâ¤l³]©w -----//	
+	//----- é‹ç®—å­è¨­å®š -----//	
 	op_map["EQ"] = 1;
 	op_map["NE"] = 2;
 	op_map["GE"] = 3;
@@ -45,23 +45,23 @@ int main()
 	op_map["+"] = 7;
 	op_map["-"] = 8;
 	
-	//----- ¿é¤JÀÉ³B²z -----//
+	//----- è¼¸å…¥æª”è™•ç† -----//
 	EXPANDING = false;
 	do{
 		GETLINE();
 		PROCESSLINE();
 	}while(opcode != "END");
 	
-	//----- ÃöÀÉ -----//
+	//----- é—œæª” -----//
 	in.close();
 	out.close();
 	
-	//----- ¼g¤JDEFTAB FILE -----//
+	//----- å¯«å…¥DEFTAB FILE -----//
 	out.open("DEFTAB.txt");
 	for(int i=0; i<DEFTAB.size(); i++) out << DEFTAB[i] << endl;
 	out.close();
 	
-	//----- ¼g¤JNAMTAB FILE -----//
+	//----- å¯«å…¥NAMTAB FILE -----//
 	out.open("NAMTAB.txt");
 	for(map<string, pair<int, int> >::iterator i=NAMTAB.begin(); i!=NAMTAB.end(); i++)
 	{
@@ -80,11 +80,11 @@ void PROCESSLINE()
 
 void GETLINE(int line)
 {
-	//----- ¨ú±o¤U¤@¦æ«ü¥O -----// 
+	//----- å–å¾—ä¸‹ä¸€è¡ŒæŒ‡ä»¤ -----// 
 	if(EXPANDING) instr = DEFTAB[line];
 	else getline(in, instr);
 	
-	//----- «ü¥O³B²z -----// 
+	//----- æŒ‡ä»¤è™•ç† -----// 
 	symbol="", opcode="", operand="";
 	int cnt=0;
 	for(int i=0; i<instr.length(); i++)
@@ -99,12 +99,12 @@ void GETLINE(int line)
 void DEFINE()
 {
 	cout << "define" << endl;
-	//----- Àx¦s¥¨¶°¸ê°T -----//
+	//----- å„²å­˜å·¨é›†è³‡è¨Š -----//
 	string macro_name = symbol;
 	int start_point = def_point;
 	
-	//----- Àx¦s¤Ş¼Æ¦WºÙ©MÀq»{­È -----//
-	vector <string> arg_nam; //Àx¦s¤Ş¼Æ¦WºÙ 
+	//----- å„²å­˜å¼•æ•¸åç¨±å’Œé»˜èªå€¼ -----//
+	vector <string> arg_nam; //å„²å­˜å¼•æ•¸åç¨± 
 	bool set_arg = true;
 	string tmp = "";
 	for(int i=0; i<operand.length(); i++)
@@ -128,29 +128,29 @@ void DEFINE()
 		}
 		else tmp += operand[i]; 
 	}
-	if(set_arg) //Àx¦s³Ì«á¤@­Ó­È 
+	if(set_arg) //å„²å­˜æœ€å¾Œä¸€å€‹å€¼ 
 	{
 		arg_nam.push_back(tmp);
 		ARGTAB[macro_name].push_back("");
 	}
 	else ARGTAB[macro_name].push_back(tmp);
 	
-	//----- ¼g¤JDEFTAB -----//
+	//----- å¯«å…¥DEFTAB -----//
 	string def = symbol + '\t' + arg_nam[0];
 	for(int i=1; i<arg_nam.size(); i++) def += "," + arg_nam[i];
 	DEFTAB.push_back(def);
-	def_point++; //¦æ¼Æ¼W¥[ 
+	def_point++; //è¡Œæ•¸å¢åŠ  
 	
-	//----- ©w¸q³B²z -----//
+	//----- å®šç¾©è™•ç† -----//
 	int level = 1;
 	while(level > 0)
 	{
 		GETLINE();
 		
-		//----- ²¤¹Lµù¸Ñ -----//
+		//----- ç•¥éè¨»è§£ -----//
 		if(instr[0] == '.') continue;
 		
-		//----- ¯Á¤Ş´À¥N¤Ş¼Æ -----//
+		//----- ç´¢å¼•æ›¿ä»£å¼•æ•¸ -----//
 		string opd_tmp = "";
 		for(int i=0; i<operand.length(); i++)
 		{
@@ -159,7 +159,7 @@ void DEFINE()
 				opd_tmp += operand[i];
 				continue;
 			}
-			//----- ¤Ş¼Æ¦W -----// 
+			//----- å¼•æ•¸å -----// 
 			tmp = "&";
 			i++;
 			while(i<operand.length())
@@ -168,7 +168,7 @@ void DEFINE()
 				else break; 
 			}
 			i--;
-			//----- ¨ú¥N -----// 
+			//----- å–ä»£ -----// 
 			bool find = false;
 			for(int j=0; j<arg_nam.size(); j++)
 				if(tmp == arg_nam[j]) 
@@ -179,16 +179,16 @@ void DEFINE()
 			if(!find) opd_tmp += tmp;
 		}
 		
-		//----- ¼g¤JDEFTAB -----//
+		//----- å¯«å…¥DEFTAB -----//
 		def = symbol + '\t' + opcode + '\t' + opd_tmp;
 		DEFTAB.push_back(def);
-		def_point++; //¦æ¼Æ¼W¥[ 
+		def_point++; //è¡Œæ•¸å¢åŠ  
 		
 		if(opcode == "MACRO") level+=1;
 		else if(opcode == "MEND") level-=1;
 	}
 	
-	//----- ±N¥¨¶°¸ê°T¼g¤JNAMTAB -----//
+	//----- å°‡å·¨é›†è³‡è¨Šå¯«å…¥NAMTAB -----//
 	NAMTAB[macro_name] = make_pair(start_point, def_point-1);
 	
 	cout << "end define" << endl;
@@ -199,12 +199,12 @@ void EXPAND()
 	cout << "expand" << endl;
 	EXPANDING = true;
 	
-	//----- ªì©l¤Ş¼Æ­È -----//
+	//----- åˆå§‹å¼•æ•¸å€¼ -----//
 	int arg_size = ARGTAB[opcode].size();
-	string arg[arg_size+1]; //±q1¶}©lÀx¦s
+	string arg[arg_size+1]; //å¾1é–‹å§‹å„²å­˜
 	for(int i=0; i<arg_size; i++) arg[i+1] = ARGTAB[opcode][i];
 	
-	//----- ¶ñ¤J¤Ş¼Æ­È -----//
+	//----- å¡«å…¥å¼•æ•¸å€¼ -----//
 	string tmp = "";
 	int cnt = 1;
 	for(int i=0; i<operand.length(); i++)
@@ -218,42 +218,42 @@ void EXPAND()
 	}
 	arg[cnt] = tmp;
 	
-	//----- ¼g¤JARGTAB FILE -----//
+	//----- å¯«å…¥ARGTAB FILE -----//
 	ofstream f("ARGTAB.txt");
 	for(int i=1; i<arg_size+1; i++) f << arg[i] << endl;
 	f.close();
 	
-	//----- ±N¥¨¶°½Õ¥Î¥Hµù¸Ñ¤è¦¡¼g¤Joutput file -----//
+	//----- å°‡å·¨é›†èª¿ç”¨ä»¥è¨»è§£æ–¹å¼å¯«å…¥output file -----//
 	out << "." << instr << endl;
 	
-	//----- ¥¨¶°³B²z -----//
-	map <string, int> var; //Àx¦s¤º³¡°Ñ¼Æ 
+	//----- å·¨é›†è™•ç† -----//
+	map <string, int> var; //å„²å­˜å…§éƒ¨åƒæ•¸ 
 	int beg=NAMTAB[opcode].first, end=NAMTAB[opcode].second;
 	for(int i=beg+1; i<end; i++)
 	{
 		GETLINE(i);
 		
-		//----- «ü¥O³B²z(¤Ş¼Æ¡B°Ñ¼Æµ¥) -----//	
+		//----- æŒ‡ä»¤è™•ç†(å¼•æ•¸ã€åƒæ•¸ç­‰) -----//	
 		instr_proc(var, arg);
 		
 		 
-		if(opcode == "SET") continue; //¥¨¶°¤º³¡»yªk ¸õ¹L
+		if(opcode == "SET") continue; //å·¨é›†å…§éƒ¨èªæ³• è·³é
 		
-		//----- «DIF¡BWHILE³B²z -----//
+		//----- éIFã€WHILEè™•ç† -----//
 		if(opcode != "IF" && opcode != "WHILE")
 		{
 			out << instr << endl;
 			continue;
 		}
 		
-		//----- IF¡BWHILE³B²z -----//
+		//----- IFã€WHILEè™•ç† -----//
 		bool result = expression(true);
 		
 		int loop = 0;
 		if(opcode == "WHILE") loop = i;
 		
 		GETLINE(++i);
-		if(result) //±ø¥ó¦¨¥ß®É  
+		if(result) //æ¢ä»¶æˆç«‹æ™‚  
 		{
 			while(opcode!="ENDIF"&&opcode!="ELSE"&&opcode!="ENDW")
 			{
@@ -262,9 +262,9 @@ void EXPAND()
 				GETLINE(++i);
 			}
 			if(opcode=="ELSE") while(opcode!="ENDIF") GETLINE(++i);
-			if(loop) i = loop-1; //WHILE°j°é  
+			if(loop) i = loop-1; //WHILEè¿´åœˆ  
 		}
-		else //±ø¥ó¤£¦¨¥ß®É  
+		else //æ¢ä»¶ä¸æˆç«‹æ™‚  
 		{
 			while(opcode!="ENDIF"&&opcode!="ELSE"&&opcode!="ENDW")
 				GETLINE(++i);
@@ -278,7 +278,7 @@ void EXPAND()
 		}		
 	}
 
-	//----- LABEL¼W¥[ -----//
+	//----- LABELå¢åŠ  -----//
 	label[1] += 1;
 	if(label[1] > 'Z')
 	{
@@ -306,8 +306,8 @@ int str2int(string str)
 template <class T> 
 T expression(T type)
 {
-	//----- ¤À§OÀx¦s¹Bºâ¤l¡B¹Bºâ¤¸ -----//
-	string op[3] = {"", "", ""}; //¤À§OÀx¦s{¹Bºâ¤¸1,¹Bºâ¤l,¹Bºâ¤¸2} 
+	//----- åˆ†åˆ¥å„²å­˜é‹ç®—å­ã€é‹ç®—å…ƒ -----//
+	string op[3] = {"", "", ""}; //åˆ†åˆ¥å„²å­˜{é‹ç®—å…ƒ1,é‹ç®—å­,é‹ç®—å…ƒ2} 
 	int cnt = 0;
 	for(int i=0; i<operand.length(); i++)
 	{
@@ -327,10 +327,10 @@ T expression(T type)
 		op[cnt] += operand[i];
 	}
 	
-	//----- °Ñ¼Æ½á­È SET -----//
+	//----- åƒæ•¸è³¦å€¼ SET -----//
 	if(op[1] == "") return str2int(op[0]);
 	
-	//----- ¹Bºâ¦¡³B²z -----//
+	//----- é‹ç®—å¼è™•ç† -----//
 	switch(op_map[op[1]])
 	{
 		case 1: //EQ
@@ -358,17 +358,17 @@ T expression(T type)
 void instr_proc(map<string, int>& var, string arg[])
 {
 	cout << " instr_proc" << endl;
-	//----- ¤Ş¼Æ³B²z¡B°Ñ¼Æ³B²z¡B¼W¥[LABEL -----//
-	string tmp = ""; //¼È¦s§ó§ï«áªºOPERAND 
+	//----- å¼•æ•¸è™•ç†ã€åƒæ•¸è™•ç†ã€å¢åŠ LABEL -----//
+	string tmp = ""; //æš«å­˜æ›´æ”¹å¾Œçš„OPERAND 
 	for(int i=0; i<operand.length(); i++)
 	{
-		if(operand[i]=='?') //¤Ş¼Æ³B²z
+		if(operand[i]=='?') //å¼•æ•¸è™•ç†
 		{
 			int index = operand[++i] - '0';
 			tmp += arg[index];
 			if(operand[i+1] == '-' && operand[i+2] == '>') i+=2;
 		}
-		else if(operand[i]=='&') //°Ñ¼Æ³B²z
+		else if(operand[i]=='&') //åƒæ•¸è™•ç†
 		{
 			i++;
 			string v = "&";
@@ -385,12 +385,12 @@ void instr_proc(map<string, int>& var, string arg[])
 				cout << "error : not var \'" << v << "\'" << endl;
 			}
 		}
-		else if(operand[i]=='$') tmp += "$" + label; //¼W¥[LABEL
+		else if(operand[i]=='$') tmp += "$" + label; //å¢åŠ LABEL
 		else tmp += operand[i];
 	}
 	operand = tmp;
 	
-	//----- ¼W¥[LABEL -----//
+	//----- å¢åŠ LABEL -----//
 	if(symbol[0] == '$')
 	{
 		tmp = "$" + label;
@@ -400,7 +400,7 @@ void instr_proc(map<string, int>& var, string arg[])
 	
 	instr = symbol + '\t' + opcode + '\t' + operand;
 	
-	//----- °Ñ¼Æªì©l¤Æ -----//
+	//----- åƒæ•¸åˆå§‹åŒ– -----//
 	if(opcode == "SET") var[symbol] = expression(0);
 	cout << " end instr_proc" << endl;
 }
